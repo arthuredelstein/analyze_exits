@@ -1,0 +1,35 @@
+table {
+    font-size: 14px;
+    table-layout: fixed;
+}
+table tr th {
+    background-color: black;
+    color: white;
+}
+table tr:nth-child(even) {
+    background: #CCC;
+}
+table tr:nth-child(odd) {
+    background: #FFF;
+}
+table tr th {
+    text-align: left;
+}
+table tr th {
+    padding: 2px 4px;
+    margin: 0px;
+}
+table tr td {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    max-width: 200px;
+    margin: 0px;
+    padding: 2px 4px;
+}
+table tr:hover {
+    background-color: Pink;
+}
+p {
+    font-size: 16px;
+}
