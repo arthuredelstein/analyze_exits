@@ -81,9 +81,10 @@
   (let [fields+ (cons "dns_timeout_percent" fields)
         latest-result-file (last (raw-results-files))
         latest-result (read-result-file latest-result-file)
+        exits (or (latest-result "_relays")
+                  (comment (onionoo-exits fields)))
         file-date (date-from-filename latest-result-file)
         timeout-rates (timeout-rates latest-result)
-        exits (onionoo-exits fields)
         average (mean (vals timeout-rates))
         raw-data-table (assemble-data-table exits fields timeout-rates)]
     [fields+ (reverse (sort-by #(Double/parseDouble (first %)) (remove nil? raw-data-table))) average file-date]))
