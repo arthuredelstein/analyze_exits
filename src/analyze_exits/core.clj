@@ -115,7 +115,11 @@
      [:p {:style "font-weight: bold; color: DarkRed;"}
       "Dear exit relay operator: is your exit timing out on DNS requests? Fix the problem "
       "by editing your resolv.conf, according to instructions "
-      [:a {:href "https://lists.torproject.org/pipermail/tor-relays/2017-November/013531.html"} "here"] "."]]
+      [:a {:href "https://lists.torproject.org/pipermail/tor-relays/2017-November/013531.html"} "here"] "."]
+     [:p "Source code: "
+      [:a {:href "https://github.com/arthuredelstein/tor_dns_survey"} "scanner"]
+      " | "
+      [:a {:href "https://github.com/arthuredelstein/analyze_exits"} "table"]]]
     (html-table header body)
     ]))
 
