@@ -109,8 +109,13 @@
     ]
    [:body
     [:h2 "Tor Exit DNS Timeouts"]
-    [:p (str "Average unweighted timeout rate: " (as-percent average) "%")]
-    [:p (str "Test ran at " (utc-string file-date))]
+    [:div {:style "max-width: 600px"}
+     [:p (str "Average unweighted timeout rate: " (as-percent average) "%")]
+     [:p (str "Test ran at " (utc-string file-date))]
+     [:p {:style "font-weight: bold; color: DarkRed;"}
+      "Dear exit relay operator: is your exit timing out on DNS requests? Fix the problem "
+      "by editing your resolv.conf, according to instructions "
+      [:a {:href "https://lists.torproject.org/pipermail/tor-relays/2017-November/013531.html"} "here"] "."]]
     (html-table header body)
     ]))
 
