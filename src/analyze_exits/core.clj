@@ -4,7 +4,7 @@
    [clojure.java.io :as io]
    [clojure.string :as s]
    [hiccup.page :as page]
-   [hiccup.util :as html-util]
+   [hiccup.util]
    ))
 
 (defn date-from-filename
@@ -86,17 +86,18 @@
         file-date (date-from-filename latest-result-file)
         timeout-rates (timeout-rates latest-result)
         average (mean (vals timeout-rates))
-        raw-data-table (assemble-data-table exits fields timeout-rates)]
-    [fields+ (reverse (sort-by #(Double/parseDouble (first %)) (remove nil? raw-data-table))) average file-date]))
+        raw-data-table (assemble-data-table exits fields timeout-rates)
+        body (reverse (sort-by #(Double/parseDouble (first %)) (remove nil? raw-data-table)))]
+    [fields+ body average file-date]))
 
 (defn html-table
   [header body]
   [:table
    [:tr (for [item header]
-          [:th item])]
+          [:th (hiccup.util/escape-html item)])]
    (for [row body]
      [:tr (for [item row]
-            [:td item])])])
+            [:td (hiccup.util/escape-html item)])])])
 
 (defn html-page
   [header body average file-date]

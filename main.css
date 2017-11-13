@@ -20,12 +20,10 @@ table tr th {
     margin: 0px;
 }
 table tr td {
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
     max-width: 200px;
     margin: 0px;
     padding: 2px 4px;
+    word-wrap: break-word;
 }
 table tr:hover {
     background-color: Pink;
