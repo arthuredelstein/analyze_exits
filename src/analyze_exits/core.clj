@@ -7,6 +7,10 @@
    [hiccup.util]
    ))
 
+(defn compress-css
+  [css-string]
+  (s/replace css-string #"\s+" " "))
+
 (defn date-from-filename
   [filename]
   (let [text (re-find #"[0-9]+_[0-9]+" filename)
@@ -49,7 +53,7 @@
    "platform"
 ;   "or_addresses"
    "bandwidth_rate"
-   "consensus_weight"
+   "exit_probability"
    ])
 
 (defn onionoo-exits
@@ -87,7 +91,11 @@
         timeout-rates (timeout-rates latest-result)
         average (mean (vals timeout-rates))
         raw-data-table (assemble-data-table exits fields timeout-rates)
-        body (reverse (sort-by #(Double/parseDouble (first %)) (remove nil? raw-data-table)))]
+        body (->> raw-data-table
+                  (remove nil?)
+                  (sort-by #(Double/parseDouble (last %)))
+                  (sort-by #(Double/parseDouble (first %)))
+                  reverse)]
     [fields+ body average file-date]))
 
 (defn html-table
@@ -105,7 +113,7 @@
    [:head
     [:title "Tor Exit DNS Timeouts"]
     [:meta {:charset "utf-8"}]
-    [:style {:type "text/css"} (slurp "main.css")]
+    [:style {:type "text/css"} (compress-css (slurp "main.css"))]
     ]
    [:body
     [:h2 "Tor Exit DNS Timeouts"]

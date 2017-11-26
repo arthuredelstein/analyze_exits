@@ -25,9 +25,6 @@ table tr td {
     padding: 2px 4px;
     word-wrap: break-word;
 }
-table tr:hover {
-    background-color: Pink;
-}
 p {
     font-size: 16px;
 }
