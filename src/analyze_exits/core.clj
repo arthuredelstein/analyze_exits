@@ -93,7 +93,7 @@
         raw-data-table (assemble-data-table exits fields timeout-rates)
         body (->> raw-data-table
                   (remove nil?)
-                  (sort-by #(Double/parseDouble (last %)))
+;                  (sort-by #(Double/parseDouble (last %)))
                   (sort-by #(Double/parseDouble (first %)))
                   reverse)]
     [fields+ body average file-date]))
