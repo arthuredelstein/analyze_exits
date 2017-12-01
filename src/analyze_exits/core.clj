@@ -129,9 +129,9 @@
      [:p (str "Average probability-weighted timeout rate: " (as-percent average) "%")]
      [:p (str "Test ran at " (utc-string file-date))]
      [:p {:style "font-weight: bold; color: DarkRed;"}
-      "Dear exit relay operator: is your exit timing out on DNS requests? Fix the problem "
-      "by editing your resolv.conf, according to instructions "
-      [:a {:href "https://trac.torproject.org/projects/tor/wiki/doc/DnsResolver#TuningeventdnscomponentofTorDaemon"} "here"] "."]
+      "Dear exit relay operator: is your exit timing out on DNS requests? Please fix the problem by "
+      [:a {:href "https://lists.torproject.org/pipermail/tor-announce/2017-December/000147.html"}
+       "upgrading your tor relay"] "."]
      [:p "Source code: "
       [:a {:href "https://github.com/arthuredelstein/tor_dns_survey"} "scanner"]
       " | "
