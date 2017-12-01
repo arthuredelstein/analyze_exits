@@ -68,6 +68,14 @@
   [val]
   (format "%3.1f" (* 100. val)))
 
+(defn average-timeout-rate [exits timeout-rates]
+  (apply +
+         (for [exit exits]
+           (* (get exit "exit_probability" 0)
+              (or
+               (get timeout-rates (get exit "fingerprint"))
+               0)))))
+
 (defn assemble-data-table
   [exits fields timeout-rates]
   (let [exits-map (group-by #(get % "fingerprint") exits)]
@@ -89,7 +97,7 @@
                   (comment (onionoo-exits fields)))
         file-date (date-from-filename latest-result-file)
         timeout-rates (timeout-rates latest-result)
-        average (mean (vals timeout-rates))
+        average (average-timeout-rate exits timeout-rates)
         raw-data-table (assemble-data-table exits fields timeout-rates)
         body (->> raw-data-table
                   (remove nil?)
@@ -118,7 +126,7 @@
    [:body
     [:h2 "Tor Exit DNS Timeouts"]
     [:div {:style "max-width: 600px"}
-     [:p (str "Average unweighted timeout rate: " (as-percent average) "%")]
+     [:p (str "Average probability-weighted timeout rate: " (as-percent average) "%")]
      [:p (str "Test ran at " (utc-string file-date))]
      [:p {:style "font-weight: bold; color: DarkRed;"}
       "Dear exit relay operator: is your exit timing out on DNS requests? Fix the problem "
