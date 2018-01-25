@@ -20,7 +20,7 @@
 (defn utc-string
   [date]
   (let [tz (java.util.TimeZone/getTimeZone "UTC")
-        df (java.text.SimpleDateFormat. "yyyy-MM-dd HH:mm 'UTC'")]
+        df (java.text.SimpleDateFormat. "yyyy-MM-dd HH:mm:ss 'UTC'")]
     (.setTimeZone df tz)
     (.format df date)))
 
@@ -88,6 +88,12 @@
   [numbers]
   (/ (apply + numbers) (count numbers)))
 
+(defn timeout-probability
+  [data-row]
+  (let [exit_probability (or (last data-row) 0.000001)
+        timeout_rate (Double/parseDouble (first data-row))]
+    (* exit_probability timeout_rate)))
+
 (defn data-table
   []
   (let [fields+ (cons "dns_timeout_percent" fields)
@@ -101,8 +107,7 @@
         raw-data-table (assemble-data-table exits fields timeout-rates)
         body (->> raw-data-table
                   (remove nil?)
-;                  (sort-by #(Double/parseDouble (last %)))
-                  (sort-by #(Double/parseDouble (first %)))
+                  (sort-by timeout-probability)
                   reverse)]
     [fields+ body average file-date]))
 
