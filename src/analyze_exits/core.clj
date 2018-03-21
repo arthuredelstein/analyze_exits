@@ -82,7 +82,8 @@
     (for [[fp timeout-rate] timeout-rates]
       (when-let [exit (first (exits-map fp))]
         (let [timeout-percent (as-percent timeout-rate)]
-          (cons timeout-percent (map exit fields)))))))
+          (-> exit
+              (assoc "dns_timeout_percent" timeout-percent)))))))
 
 (defn mean
   [numbers]
@@ -90,13 +91,13 @@
 
 (defn timeout-probability
   [data-row]
-  (let [exit_probability (or (last data-row) 0.000001)
-        timeout_rate (Double/parseDouble (first data-row))]
-    (* exit_probability timeout_rate)))
+  (let [exit-probability (or (get data-row "exit_probability") 0.000001)
+        timeout-rate (Double/parseDouble (get data-row "dns_timeout_percent"))]
+    (* exit-probability timeout-rate)))
 
 (defn data-table
   []
-  (let [fields+ (cons "dns_timeout_percent" fields)
+  (let [fields+ (concat ["dns_timeout_percent"] fields)
         latest-result-file (last (raw-results-files))
         latest-result (read-result-file latest-result-file)
         exits (or (latest-result "_relays")
@@ -117,8 +118,11 @@
    [:tr (for [item header]
           [:th (hiccup.util/escape-html item)])]
    (for [row body]
-     [:tr (for [item row]
-            [:td (hiccup.util/escape-html item)])])])
+     [:tr (for [item header]
+            (let [text (hiccup.util/escape-html (get row item))]
+              (if (= item "fingerprint")
+                [:td [:a {:href (str "https://metrics.torproject.org/rs.html#details/" text)} text]]
+                [:td text])))])])
 
 (defn html-page
   [header body average file-date]
