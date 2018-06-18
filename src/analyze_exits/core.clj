@@ -144,7 +144,9 @@
      [:p "Source code: "
       [:a {:href "https://github.com/arthuredelstein/tor_dns_survey"} "scanner"]
       " | "
-      [:a {:href "https://github.com/arthuredelstein/analyze_exits"} "table"]]]
+      [:a {:href "https://github.com/arthuredelstein/analyze_exits"} "table"]]
+     [:p "Historical JSON data is "
+      [:a {:href "/exits-json/"} "here"] "."]]
     (html-table header body)
     ]))
 
@@ -154,8 +156,23 @@
     (spit (str "../exits/" (or filename "temp.html"))
           (html-page header body average file-date))))
 
+(defn daily-raw-to-summary! [file]
+  (let [data (read-result-file file)
+        name (.getName (io/as-file file))
+        rates (timeout-rates data)]
+    (when (not-empty rates)
+      (spit (str "../json/" name)
+            (json/write-str (timeout-rates data))))
+    name))
+
 (defn -main
   "Main program."
   []
   (write-page! "index.html")
+  (daily-raw-to-summary! (last (raw-results-files)))
   )
+
+(defn generate-all-daily-summaries! []
+  (doseq [file (raw-results-files)]
+    (println (daily-raw-to-summary! file))))
+
