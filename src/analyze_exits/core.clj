@@ -146,7 +146,9 @@
       " | "
       [:a {:href "https://github.com/arthuredelstein/analyze_exits"} "table"]]
      [:p "Historical JSON data is "
-      [:a {:href "/exits-json/"} "here"] "."]]
+      [:a {:href "/exits-json/"} "here"] ". "
+      "Latest JSON results are "
+      [:a {:href "/exits-json/exit_results_latest.json"} "here"] "."]]
     (html-table header body)
     ]))
 
