@@ -29,6 +29,7 @@
   (->> (file-seq (io/as-file "../all_exit_results"))
        (map #(.getPath %))
        (filter #(.endsWith % ".json"))
+       (remove #(.endsWith % "_latest.json"))
        sort))
 
 (defn read-result-file
@@ -163,8 +164,11 @@
         name (.getName (io/as-file file))
         rates (timeout-rates data)]
     (when (not-empty rates)
-      (spit (str "../json/" name)
-            (json/write-str (timeout-rates data))))
+      (let [rates (timeout-rates data)]
+        (spit (str "../json/" name)
+              (json/write-str rates))
+        (spit (str "../json/exit_results_latest.json")
+              (json/write-str rates))))
     name))
 
 (defn -main
