@@ -40,10 +40,11 @@
 (defn timeout-rates [result-data]
   (into {}
         (for [[fp results] (result-data "example.com")]
-          [fp
-           (double (/ (count (filter #(= (% 0) "TIMEOUT")
-                                     results))
-                      (count results)))])))
+          (let [timeout-count (count (filter #(= (% 0) "TIMEOUT")))
+                success-count (count (filter #(= (% 0) "SUCCEEDED")))
+                total-count (+ success-count timeout-count)]
+            (when (> total-count 0)
+              [fp (double (/ timeout-count total-count))])))))
 
 (def fields
   ["nickname"
