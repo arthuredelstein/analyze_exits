@@ -40,8 +40,8 @@
 (defn timeout-rates [result-data]
   (into {}
         (for [[fp results] (result-data "example.com")]
-          (let [timeout-count (count (filter #(= (% 0) "TIMEOUT")))
-                success-count (count (filter #(= (% 0) "SUCCEEDED")))
+          (let [timeout-count (count (filter #(= (% 0) "TIMEOUT") results))
+                success-count (count (filter #(= (% 0) "SUCCEEDED") results))
                 total-count (+ success-count timeout-count)]
             (when (> total-count 0)
               [fp (double (/ timeout-count total-count))])))))
